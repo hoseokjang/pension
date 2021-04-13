@@ -12,6 +12,7 @@
 <c:import url="../top.jsp"/>
 <div id="third">
 <!-- 모든 문서의 내용 시작 부분 -->
+<form method="post" action="twrite_ok.jsp" enctype="multipart/form-data" autocomplete="off">
 <table width="400" align="center">
 	<caption><h3>여행 후기 글쓰기</h3></caption>
 	<tr>

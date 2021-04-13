@@ -34,14 +34,16 @@ tr{text-align:center;}
 	<c:forEach var="tdto" items="${tlist }">
 	<tr>
 		<td> ${tdto.name } </td>
-		<td> ${tdto.title } </td>
+		<td> <a href="treadnum.jsp?id=${tdto.id }"> ${tdto.title } </a> </td>
 		<td> ${tdto.readnum } </td>
 		<td> ${tdto.writeday } </td>
 	</tr>
 	</c:forEach>
+	<c:if test="${userid != null }">
 	<tr>
 		<td colspan="4" align="center"> <a href="twrite.jsp">후기 작성</a> </td>
 	</tr>
+	</c:if>
 </table>
 
 </div>
