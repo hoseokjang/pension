@@ -63,5 +63,98 @@ public class TourDao {
 		}
 		return tlist;
 	}
+	public void treadnum(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{
+		String id = request.getParameter("id");
+		String sql = "update tour set readnum=readnum+1 where id="+id;
+		Statement stmt = conn.createStatement();
+		stmt.executeUpdate(sql);
+		stmt.close();
+		conn.close();
+		response.sendRedirect("tcontent.jsp?id="+id);
+	}
+	public TourDto tcontent(HttpServletRequest request) throws Exception
+	{
+		String id = request.getParameter("id");
+		String sql = "select * from tour where id=?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1,id);
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		TourDto tdto = new TourDto();
+		tdto.setId(rs.getInt("id"));
+		tdto.setUserid(rs.getString("userid"));
+		tdto.setTitle(rs.getString("title"));
+		tdto.setContent(rs.getString("content"));
+		tdto.setFname(rs.getString("fname"));
+		tdto.setReadnum(rs.getInt("readnum"));
+		tdto.setWriteday(rs.getString("writeday"));
+		return tdto;
+	}
+	public void tdelete(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{
+		String id = request.getParameter("id");
+		String sql = "delete from tour where id="+id;
+		Statement stmt = conn.createStatement();
+		stmt.executeUpdate(sql);
+		stmt.close();
+		conn.close();
+		response.sendRedirect("tlist.jsp");
+	}
+	public TourDto tupdate(HttpServletRequest request) throws Exception
+	{
+		String id = request.getParameter("id");
+		String sql = "select * from tour where id=?";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, id);
+		ResultSet rs = pstmt.executeQuery();
+		rs.next();
+		TourDto tdto = new TourDto();
+		tdto.setId(rs.getInt("id"));
+		tdto.setUserid(rs.getString("userid"));
+		tdto.setTitle(rs.getString("title"));
+		tdto.setContent(rs.getString("content"));
+		tdto.setFname(rs.getString("fname"));
+		tdto.setReadnum(rs.getInt("readnum"));
+		tdto.setWriteday(rs.getString("writeday"));
+		return tdto;
+	}
+	public void tupdate_ok(HttpServletRequest request,HttpServletResponse response) throws Exception
+	{
+		String path=request.getRealPath("/tour/img");
+		int size=1024*1024*10;
+		MultipartRequest multi=new MultipartRequest(
+				request,path,size,"utf-8",new DefaultFileRenamePolicy()
+				);
+		String id = multi.getParameter("id");
+		String title= multi.getParameter("title");
+		String content = multi.getParameter("content");
+		String fname = multi.getFilesystemName("fname");
+		String sql;
+		if (fname==null)
+		{
+			sql = "update tour set title=?, content=? where id=?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			pstmt.setString(3, id);
+			pstmt.executeUpdate();
+			pstmt.close();
+		}
+		else 
+		{
+			sql = "update tour set title=?, content=?, fname=? where id=?";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			pstmt.setString(3, fname);
+			pstmt.setString(4, id);
+			pstmt.executeUpdate();
+			pstmt.close();
+		}
+		sql = "update tour set title=?, content=?, fname=? where id=?";
+		conn.close();
+		response.sendRedirect("tcontent.jsp?id="+id);
+	}
 }
 
